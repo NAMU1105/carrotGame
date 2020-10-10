@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Namu's mini game with pure HTML5, CSS, javaScript</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/fc53064b02.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <body>
+    <main>
+      <div class="upper_part">
+        <button class="play">
+          <!-- <img src="/carrot/img/" alt="play" /> -->
+          <i class="fas fa-play"></i>
+          play
+        </button>
+        <div class="timer"><span></span></div>
+        <div class="count"><span>10</span></div>
+      </div>
+
+      <!-- <div class="bug"><img src="img/bug.png" alt="but" /></div>
+      <div class="carrot"><img src="img/carrot.png" alt="carrot" /></div> -->
+
+      <div class="modal hidden">
+        <span>Replay?</span><button class="restart_btn">Replay</button>
+      </div>
+    </main>
+    <!-- <audio autoplay="autoplay"> -->
+    <!-- <source src="./sound/bg.mp3" /> -->
+    <audio src="./sound/bg.mp3">
+      Your browser does not support the
+      <code>audio</code> element.
+    </audio>
+    <span class="hidden" id="audio"></span>
+    <script src="main.js"></script>
+  </body>
+</html>
