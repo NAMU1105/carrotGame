@@ -416,27 +416,6 @@ replay_btn.addEventListener("click", (event) => {
   counter = setInterval(timer, 1000);
 });
 
-//   console.groupEnd();
-// };
-
-// const click_event_obj = () => {
-//   console.group("click_event_obj");
-//   const bug = document.querySelector(".bug");
-
-//   // 2. 당근/벌레 클릭 이벤트
-//   bug.addEventListener("click", (event) => {
-//     console.log(`event :`, event.target);
-
-//     // 벌레 클릭
-//     // if (event.target.className == "bug") {
-//     alert("bug");
-//     // } else if (event.target.className == "carrot") {
-//     //   alert("carrot");
-//     // }
-//   });
-//   console.groupEnd();
-// };
-
 window.onload = () => {
   // $('#audio').html('<audio autoplay><source src="audio/ding.mp3"></audio>');
   // document
