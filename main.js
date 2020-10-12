@@ -10,7 +10,7 @@
 
 // 카운트다운 할 시간을 담은 변수(1분)
 // 테스트를 위해 시간 줄여놓음
-let count = 10;
+let count = 15;
 const original_count = count;
 
 // 당근 수
@@ -249,85 +249,6 @@ const obj_create = () => {
 
     id++;
   }
-
-  // console.log(position_top);
-  // console.log(position_left);
-  // for (let i = 0; i < bug_count; i++) {
-  //   // Math.random()
-  //   // console.log("docHeight: ", docHeight);
-
-  //   const random_top = randomNum(500, 800);
-  //   // const random_top = randomNum(600, docHeight / 2 - 100);
-  //   console.log("random_top: ", random_top);
-  //   const random_left = randomNum(0, docWidth - 200);
-
-  //   //   벌레 생성
-  //   const bug = document.createElement("div");
-  //   bug.setAttribute("class", "bug_wrapper");
-
-  //   const bug_img = document.createElement("img");
-  //   bug_img.setAttribute("src", "img/bug.png");
-  //   bug_img.setAttribute("alt", "bug");
-  //   bug_img.setAttribute("class", "bug");
-  //   bug_img.setAttribute("id", "bug_" + id);
-
-  //   const divWidth = bug.clientWidth,
-  //     divHeight = bug.clientHeight,
-  //     heightMax = docHeight - divHeight,
-  //     widthMax = docWidth - divWidth;
-
-  //   // bug_img.style.top = Math.floor(Math.random() * heightMax) + 500 + "px";
-  //   // bug_img.style.left = Math.floor(Math.random() * widthMax) + "px";
-  //   bug_img.style.top = random_top + "px";
-  //   bug_img.style.left = random_left + "px";
-  //   // bug_img.style.transform = `translateY(${random_top}px)`;
-  //   // bug_img.style.transform = `translateX(${random_left}px)`;
-
-  //   bug.appendChild(bug_img);
-
-  //   bug.addEventListener(
-  //     "click",
-  //     () => {
-  //       counting(bug_img);
-  //     },
-  //     false
-  //   );
-
-  //   main.appendChild(bug);
-
-  //   // 당근 생성
-  //   const carrot = document.createElement("div");
-  //   carrot.setAttribute("class", "carrot_wrapper");
-
-  //   const carrot_img = document.createElement("img");
-  //   carrot_img.setAttribute("src", "img/carrot.png");
-  //   carrot_img.setAttribute("alt", "carrot");
-  //   carrot_img.setAttribute("id", "carrot_" + id);
-  //   carrot_img.setAttribute("class", "carrot");
-
-  //   // const random_top2 = randomNum(docHeight / 2, docHeight / 2 - 300);
-  //   // const random_top2 = randomNum(docHeight / 2 - 500, docHeight / 2 - 200);
-  //   // const random_top2 = randomNum(600, docHeight / 2 - 100);
-  //   const random_top2 = randomNum(500, 800);
-  //   const random_left2 = randomNum(0, docWidth - 200);
-
-  //   carrot_img.style.top = random_top2 + "px";
-  //   carrot_img.style.left = random_left2 + "px";
-
-  //   carrot.appendChild(carrot_img);
-  //   carrot.addEventListener(
-  //     "click",
-  //     () => {
-  //       counting(carrot_img);
-  //       // counting("carrot", "carrot_" + id);
-  //     },
-  //     false
-  //   );
-
-  //   main.appendChild(carrot);
-
-  //   id++;
-  // }
 
   console.groupEnd();
 };
