@@ -1,5 +1,4 @@
 // TODO:
-// 객체 안 겹치게 배치하기
 
 // 게임 룰 설명하기, 당근만 클릭하세요!(다시 보지 않기 추가)
 // 움직이게 하기
@@ -8,10 +7,25 @@
 // 탑10보여주기
 // 탑1에게 메시지보내기
 
+// const express = require("express");
+// const app = express();
+// const port = 3003;
+
+// app.use(express.static("public"));
+
+// app.get("/", (req, res) => {
+//   console.log("?");
+//   res.send("Hello World!");
+// });
+
+// app.listen(port, () => {
+//   console.log(`Example app listening at http://localhost:${port}`);
+// });
+
 // 카운트다운 할 시간을 담은 변수(1분)
 // 테스트를 위해 시간 줄여놓음
-let count = 15;
-const original_count = count;
+let count = 5;
+const original_count = 10;
 
 // 당근 수
 // 0이 되어야 게임 성공
@@ -162,7 +176,7 @@ const counting = (target) => {
 // 객체 랜덤 위치 배치 함수
 // *************************************** //
 const obj_create = () => {
-  console.group("random_placing");
+  console.group("obj_create");
   const main = document.querySelector("main");
 
   const docWidth = window.innerWidth,
@@ -185,8 +199,8 @@ const obj_create = () => {
     if (position_left.indexOf(random_left) === -1)
       position_left.push(random_left);
   }
-  console.log(position_top);
-  console.log(position_left);
+  // console.log(position_top);
+  // console.log(position_left);
 
   for (let i = 0; i < bug_count; i++) {
     //   벌레 생성
@@ -398,20 +412,20 @@ replay_btn.addEventListener("click", (event) => {
     carrots[i].remove();
   }
 
-  // bugs.map((obj) => {});
-  // carrots.map((obj) => {});
-  // 벌레 객체를 다시 만든다.
+  // // bugs.map((obj) => {});
+  // // carrots.map((obj) => {});
+  // // 벌레, 당근 객체를 다시 만든다.
   obj_create();
 
   document.querySelector(".timer >span").innerText = "0:" + count;
 
-  // // play버튼을 플레이 버튼으로 변경한다.
+  // play버튼을 플레이 버튼으로 변경한다.
   // document.querySelector(".play").innerHTML =
   //   ' <i class="fas fa-play"></i>play';
 
-  // 모달창을 숨긴다.
+  // // 모달창을 숨긴다.
   document.querySelector(".modal").classList.add("hidden");
-  // 카운터를 다시 가동한다.
+  // // 카운터를 다시 가동한다.
   counter_working = true;
   counter = setInterval(timer, 1000);
 });
