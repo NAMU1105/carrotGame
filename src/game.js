@@ -2,10 +2,12 @@
 // import Field from "./field.js";
 import Popup from "./popup.js";
 import Sound from "./sound.js";
-// import Field from "./field.js";
+import Field from "./field.js";
 
 export default class Game {
   constructor() {
+    this.html = document.querySelector("html");
+
     this.timer_span = document.querySelector(".timer");
     this.timer_text = document.querySelector(".timer >span");
     this.play_btn = document.querySelector(".play");
@@ -18,28 +20,50 @@ export default class Game {
     this.counter = null;
     this.speed = 0.5;
 
-    this.level = 0;
-    this.time_counts = [11];
-    // this.carrot_counts = [10, 15];
-    // this.bug_counts = [10, 15];
-    this.obj_counts = [10, 15];
+    this.level = 1;
 
-    this.count = this.time_counts[this.level];
-    this.carrot_count = this.obj_counts[this.level];
-    this.bug_count = this.obj_counts[this.level];
-    // this.bug_counts = [10, 15];
-    // this.carrot_count = this.carrot_counts[this.level];
-    // this.bug_count = this.bug_counts[this.level];
+    this.time_counts = 15;
+    this.obj_counts = 5;
+
+    this.count = this.time_counts;
+    this.carrot_count = this.obj_counts * this.level;
+    this.bug_count = this.obj_counts * this.level;
+    // this.time_counts = [11];
+    // this.obj_counts = [10, 15];
+
+    // this.count = this.time_counts[this.level];
+    // this.carrot_count = this.obj_counts[this.level];
+    // this.bug_count = this.obj_counts[this.level];
 
     this.game_finish_banner = new Popup();
     this.sound_effect = new Sound();
-
-    // this.field = new Field();
+    this.field = new Field();
     // this.count = this.field.level_counts[this.field.level];
     // this.carrot_count = this.field.obj_counts[this.field.level];
 
-    // this.background_audio = document.querySelector("audio");
+    // this.field.addEventListener("click", () => {
+    //   console.log(`field`);
+    // });
+
+    this.play_btn.addEventListener("click", () => {
+      this.on_click && this.on_click();
+    });
+
+    this.html.addEventListener("click", (event) => {
+      // console.log(`${event.target.classList}`);
+      if (
+        event.target.classList.contains("bug") ||
+        event.target.classList.contains("carrot")
+      ) {
+        const obj_id = event.target.id;
+        this.counting(obj_id);
+      }
+    });
   }
+
+  set_click_listener = (on_click) => {
+    this.on_click = on_click;
+  };
 
   // 게임이 실패인지 종료인지 확인하는 함수
   check_game_end = () => {
@@ -48,18 +72,20 @@ export default class Game {
     // const background_audio = document.querySelector("audio");
 
     if (this.carrot_count === 0) {
-      // alert("게임성공!");
-      // replay 모달창을 보여준다.
       clearInterval(this.counter);
       this.counter_working = false;
 
       url = "./sound/game_win.mp3";
 
+      // replay 모달창을 보여준다.
       this.game_finish_banner.show_with_text("YOU WON!");
 
       this.sound_effect.background_audio.pause();
       this.sound_effect.background_audio.currentTime = 0;
-      // play_state = false;
+
+      // 레벨업
+      this.level++;
+      console.log(this.level);
 
       // 당근 개수가 남아있으면 게임 실패
     } else if (this.count <= 0 && this.carrot_count !== 0) {
@@ -72,16 +98,16 @@ export default class Game {
       this.sound_effect.background_audio.pause();
       this.sound_effect.background_audio.currentTime = 0;
       // play_state = false;
-    } else if (this.bug_count !== 10) {
+
+      // 벌레 클릭 시 실패
+    } else if (this.bug_count !== this.level * this.obj_counts) {
+      // } else if (this.bug_count !== 10) {
       url = "./sound/alert.wav";
 
-      // alert("game over");
-      // replay 모달창을 보여준다.
       clearInterval(this.counter);
       this.counter_working = false;
 
-      // document.querySelector(".modal > span").innerText = "GAME OVER";
-      // document.querySelector(".modal").classList.remove("hidden");
+      // replay 모달창을 보여준다.
       this.game_finish_banner.show_with_text("GAME OVER");
 
       this.sound_effect.background_audio.pause();
@@ -91,6 +117,8 @@ export default class Game {
 
     const sound_effect_play = new Audio(url).play();
     this.sound_effect.check_bg_running(sound_effect_play);
+    // const sound_effect_play = this.sound_effect.play_sounds(url);
+    // this.sound_effect.check_bg_running(sound_effect_play);
 
     console.groupEnd();
   };
@@ -104,7 +132,7 @@ export default class Game {
   };
 
   set_time = (left_counts) => {
-    this.clear_timer_warning();
+    // this.clear_timer_warning();
     let left_time = Math.floor(left_counts / 60) + ":" + (left_counts % 60);
     if (left_counts < 10) {
       // 시간이 얼마 남지 않았으므로 빨간색 백그라운드 효과를 준다.
@@ -141,6 +169,11 @@ export default class Game {
 
   // 게임 시작 함수
   game_start = () => {
+    this.reset_game_setting();
+
+    // 모달창을 숨긴다.
+    this.game_finish_banner.hide();
+
     this.set_play_btn_pause();
 
     this.counter_working = true;
@@ -148,6 +181,8 @@ export default class Game {
     this.sound_effect.play_state = true;
 
     this.counter = setInterval(this.timer, 1000);
+
+    this.field.creat_bug_movement_raf();
   };
 
   // 게임 일시정지 함수
@@ -158,6 +193,8 @@ export default class Game {
     this.is_paused = true;
     this.counter_working = false;
     this.sound_effect.play_state = false;
+
+    this.field.cancel_bug_movement();
   };
 
   // 게임 재게 함수
@@ -167,18 +204,46 @@ export default class Game {
     this.counter_working = true;
     this.sound_effect.play_state = true;
     // this.sound_effect.resume_sounds();
+
+    this.field.creat_bug_movement_raf();
+  };
+
+  check_play_status = () => {
+    // 게임 시작
+    if (!this.counter_working && !this.is_paused) {
+      this.game_start();
+      // 일시정지 해제
+    } else if (!this.counter_working && this.is_paused) {
+      this.game_resume();
+      // 일시정지
+    } else if (this.counter_working && !this.is_paused) {
+      this.game_pause();
+    }
   };
 
   // 게임 재시작 시 기존 정보들 리셋하는 함수
   reset_game_setting = () => {
+    console.log(`bugCount: ${this.bug_count}`);
+    this.clear_timer_warning();
     // 변수값 리셋
-    this.count = this.time_counts[this.level];
-    this.carrot_count = this.obj_counts[this.level];
-    this.bug_count = this.obj_counts[this.level];
+    this.count = this.time_counts;
+    this.carrot_count = this.obj_counts * this.level;
+    this.bug_count = this.obj_counts * this.level;
+    console.log(`bugCount: ${this.bug_count}`);
+    // this.count = this.time_counts[this.level];
+    // this.carrot_count = this.obj_counts[this.level];
+    // this.bug_count = this.obj_counts[this.level];
 
+    // 남아있는 벌레, 당근 객체를 모두 없앤다.
+    this.field.remove_objs();
+    this.field.reset_setting();
+    // 벌레, 당근 객체를 다시 만든다.
+    this.field.obj_create(this.bug_count);
     // const carrot_number_span = document.querySelector(".count > span");
     this.carrot_number_span.innerText = this.carrot_count;
     this.set_time(this.count);
+
+    console.log(this.level);
   };
 
   // 이벤트 객체 클릭 시 발생하는 함수
@@ -209,6 +274,8 @@ export default class Game {
       // 음향효과
       url = "./sound/bug_pull.mp3";
       this.bug_count--;
+      console.log("bug");
+
       // console.log("this.bug_count: ", this.bug_count);
     }
 

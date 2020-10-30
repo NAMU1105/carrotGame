@@ -1,71 +1,40 @@
 "use strict";
 
-import Game from "./game.js";
+// import Game from "./game.js";
 
 export default class Field {
   constructor() {
-    // this.count_working = false;
-    // this.is_paused = false;
-    this.game = new Game();
-
-    // this.level_counts = [11];
-    // this.obj_counts = [10, 15];
+    // this.game = new Game();
     this.degrees = [];
     this.main = document.querySelector("main");
+    // this.bug_wrapper = document.querySelector(".bug_wrapper");
     this.position_top = [];
     this.position_left = [];
 
     this.docWidth = window.innerWidth;
     this.docHeight = window.innerHeight;
-    this.main = document.querySelector("main");
 
-    this.xPos = 0;
+    this.rafID = null;
+    this.angle = 0;
+
+    this.x_pos = [];
+    // this.y_pos = [];
+    this.hit_wall_counts = [];
+    // this.hit_wall = false;
+    // this.xPos = 0;
     this.yPos = 0;
-    this.hit_wall_count = 1;
-    this.no_move = false;
+    // this.hit_wall_count = 1;
+    // this.no_move = false;
   }
+
+  set_click_listener = (on_click) => {
+    this.on_click = on_click;
+  };
 
   // 랜덤 숫자 생성 함수
   randomNum = (lower, upper) => {
     let myRandom = Math.floor(Math.random() * (upper - lower + 1)) + lower;
     return myRandom;
-  };
-
-  // 객체 생성 및 랜덤 위치 배치 함수
-  obj_create = () => {
-    console.group("obj_create");
-
-    let id = 0;
-
-    while (
-      this.position_top.length <
-      this.game.obj_counts[this.game.level] * 2
-    ) {
-      // while (this.position_top.length < bug_count * 2) {
-      let random_top = this.randomNum(this.docHeight / 2, this.docHeight - 100);
-      random_top = Math.round(random_top / 20) * 20;
-      let random_left = this.randomNum(0, this.docWidth - 200);
-      random_left = Math.round(random_left / 20) * 20;
-      // const random_left = randomNum(0, docWidth - 900);
-      if (this.position_top.indexOf(random_top) === -1)
-        this.position_top.push(random_top);
-      if (this.position_left.indexOf(random_left) === -1)
-        this.position_left.push(random_left);
-    }
-
-    for (let i = 0; i < this.game.obj_counts[this.game.level]; i++) {
-      this.bug_create(id, i);
-      this.carrot_create(id, i);
-
-      id++;
-
-      let random_deg = this.randomNum(-360, 360);
-      random_deg = Math.round(random_deg / 10) * 10;
-      if (this.degrees.indexOf(random_deg) === -1)
-        this.degrees.push(random_deg);
-    }
-
-    console.groupEnd();
   };
 
   bug_create = (id, index) => {
@@ -89,7 +58,7 @@ export default class Field {
     this.main.appendChild(bug);
   };
 
-  carrot_create = (id, index) => {
+  carrot_create = (id, index, obj_counts) => {
     const carrot = document.createElement("div");
     carrot.setAttribute("class", "carrot_wrapper");
 
@@ -100,10 +69,14 @@ export default class Field {
     carrot_img.setAttribute("class", "carrot");
 
     const random_top_carrot = this.position_top[
-      this.game.obj_counts[this.game.level] * 2 - index - 1
+      obj_counts * 2 - index - 1
+      //   this.game.bug_count * 2 - index - 1
+      //   this.game.obj_counts[this.game.level] * 2 - index - 1
     ];
     const random_left_carrot = this.position_left[
-      this.game.obj_counts[this.game.level] * 2 - index - 1
+      obj_counts - index - 1
+      //   this.game.bug_count - index - 1
+      //   this.game.bug_count - index - 1
     ];
 
     carrot_img.style.top = random_top_carrot + "px";
@@ -112,6 +85,53 @@ export default class Field {
     carrot.appendChild(carrot_img);
 
     this.main.appendChild(carrot);
+  };
+
+  // 객체 생성 및 랜덤 위치 배치 함수
+  obj_create = (obj_counts) => {
+    console.group("obj_create");
+
+    // 기존 정보 리셋
+    this.position_top = [];
+    this.position_left = [];
+
+    let id = 0;
+
+    while (
+      this.position_top.length <
+      obj_counts * 2
+      //   this.game.bug_count * 2
+      //   this.game.obj_counts[this.game.level] * 2
+    ) {
+      // while (this.position_top.length < bug_count * 2) {
+      let random_top = this.randomNum(this.docHeight / 2, this.docHeight - 200);
+      random_top = Math.round(random_top / 30) * 30;
+      let random_left = this.randomNum(0, this.docWidth - 200);
+      random_left = Math.round(random_left / 30) * 30;
+      // const random_left = randomNum(0, docWidth - 900);
+      //   if (this.position_top.indexOf(random_top) === -1)
+      this.position_top.push(random_top);
+      //   if (this.position_left.indexOf(random_left) === -1)
+      this.position_left.push(random_left);
+    }
+
+    // console.log(" this.position_left: ", this.position_left);
+
+    for (let i = 0; i < obj_counts; i++) {
+      // for (let i = 0; i < this.game.bug_count; i++) {
+      // for (let i = 0; i < this.game.obj_counts[this.game.level]; i++) {
+      this.bug_create(id, i);
+      this.carrot_create(id, i, obj_counts);
+
+      id++;
+
+      let random_deg = this.randomNum(-360, 360);
+      random_deg = Math.round(random_deg / 10) * 10;
+      if (this.degrees.indexOf(random_deg) === -1)
+        this.degrees.push(random_deg);
+    }
+
+    console.groupEnd();
   };
 
   // 남아있는 객체를 모두 없앤다.
@@ -128,52 +148,69 @@ export default class Field {
     }
   };
 
-  //   벌레 나는 효과
-  fly = () => {
-    const bugs = document.querySelectorAll(".bug_wrapper>img");
-    for (let i = 0; i < this.game.obj_counts[this.game.level]; i++) {
-      this.degrees[i] += 1;
-      // degrees[i]++;
-      // 벽에 닿으면 돌아옴
-      // TODO: 위 아래도 예외처리 추가하기
-      let standard = this.xPos + this.position_left[i];
-      // let verticalStandard = yPos + position_top[i];
-      // console.log("docWidth: ", docWidth);
+  // 벌레 나는 애니메이션
+  creat_bug_movement = (obj, index) => {
+    // console.log("index: ", index);
+    // console.log("this.hit_wall_counts: ", this.hit_wall_counts);
+    // console.log("this.x_pos: ", this.x_pos);
 
-      // if (standard === docWidth) {
-      if (standard >= 1206) {
-        // console.log("standard: ", standard);
-        this.hit_wall_count++;
-      } else if (standard <= 0) {
-        this.hit_wall_count++;
-      }
+    const standard = obj.getBoundingClientRect().left;
 
-      // hit_wall_count가 홀수일 경우 -> xPos++
-      if (this.hit_wall_count % 2 === 1) {
-        this.xPos += (this.game.level + 1) * this.game.speed;
-        // yPos += (level + 1) * speed;
-
-        // hit_wall_count가 짝수일 경우 -> xPos--
-      } else {
-        this.xPos -= (this.game.level + 1) * this.game.speed;
-        // yPos -= (level + 1) * speed;
-      }
-
-      // TODO: 화면 사이즈 넘어가지 않게 처리
-      // if (standard >= docWidth) {
-      if (standard + 100 >= 1206) {
-        this.no_move = true;
-      } else {
-        this.no_move = false;
-      }
-
-      if (!this.no_move) {
-        document.querySelector(
-          `#bug_${i}`
-        ).style.transform = `translate(${this.xPos}px, ${this.yPos}px) rotate(${this.degrees[i]}deg)`;
-      }
+    // 값이 없는 경우 예외처리
+    if (!this.hit_wall_counts[index]) {
+      this.hit_wall_counts[index] = 1;
+    } else if (!this.x_pos[index]) {
+      this.x_pos[index] = 0;
     }
+    // else if (!this.y_pos[index]) {
+    //   this.y_pos[index] = 0;
+    // }
 
-    requestAnimationFrame(this.fly);
+    // 화면 밖을 나가는 경우 예외처리
+    if (standard >= this.docWidth - 100 || standard <= 0) {
+      // this.hit_wall_count++;
+      this.hit_wall_counts[index] = Number(this.hit_wall_counts[index]) + 1;
+      // this.hit_wall = true;
+      // obj.style.transform += "scaleX(-1)";
+    }
+    // else {
+    //   this.hit_wall = false;
+    // }
+    // console.log("this.hit_wall_counts[index]: ", this.hit_wall_counts[index]);
+
+    this.yPos += 0.3 * Math.sin(this.angle);
+    this.angle += 0.1;
+
+    if (this.hit_wall_counts[index] % 2 === 1) {
+      // console.log("증가");
+      this.x_pos[index] += 3;
+      obj.style.transform = `translate(${this.x_pos[index]}px, ${this.yPos}px)`;
+      // obj.style.transform += `scaleX(-1)`;
+    } else {
+      // console.log("감소");
+      this.x_pos[index] -= 3;
+      obj.style.transform = `translate(${this.x_pos[index]}px, ${this.yPos}px) scaleX(-1)`;
+    }
+  };
+
+  creat_bug_movement_raf = (level, speed) => {
+    const bugs = document.querySelectorAll(".bug_wrapper>img");
+
+    // console.log(" this.position_left: ", this.position_left);
+    for (let i = 0; i < bugs.length; i++) {
+      bugs[i] && this.creat_bug_movement(bugs[i], i);
+    }
+    this.rafID = requestAnimationFrame(this.creat_bug_movement_raf);
+  };
+
+  reset_setting = () => {
+    this.x_pos = [];
+    this.hit_wall_counts = [];
+    this.yPos = 0;
+    this.angle = 0;
+  };
+
+  cancel_bug_movement = () => {
+    cancelAnimationFrame(this.rafID);
   };
 }
