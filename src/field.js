@@ -148,7 +148,7 @@ export default class Field {
     }
   };
 
-  // 벌레 나는 애니메이션
+  // 벌레 움직이는 애니메이션
   creat_bug_movement = (obj, index) => {
     // console.log("index: ", index);
     // console.log("this.hit_wall_counts: ", this.hit_wall_counts);
@@ -179,7 +179,7 @@ export default class Field {
     // console.log("this.hit_wall_counts[index]: ", this.hit_wall_counts[index]);
 
     this.yPos += 0.3 * Math.sin(this.angle);
-    this.angle += 0.1;
+    this.angle += 0.05;
 
     if (this.hit_wall_counts[index] % 2 === 1) {
       // console.log("증가");

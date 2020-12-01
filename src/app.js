@@ -3,12 +3,17 @@
 import Popup from "./popup.js";
 import Field from "./field.js";
 import Sound from "./sound.js";
-import Game from "./game.js";
+// import Game from "./game.js";
+import GameBuilder from "./game.js";
 
 // TODO:
 
-// 리팩토링
+// **리팩토링
 // obj.freeze하기
+// 빌더패턴사용하기(done)
+
+// **디버깅
+// bgm(done)
 
 // 디비에 저장
 // 탑1에게 메시지(메일)보내기
@@ -23,7 +28,12 @@ const main = document.querySelector("main");
 const game_finish_banner = new Popup();
 const field = new Field();
 const sound_effect = new Sound();
-const game = new Game();
+// const game = new Game();
+const game = new GameBuilder()
+  .withGameDuration(15)
+  .withGameSpeed(0.5)
+  .withObjCount(5)
+  .build();
 
 const audioContext = new AudioContext();
 let play_state = sound_effect.play_state;

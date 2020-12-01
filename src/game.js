@@ -4,10 +4,37 @@ import Popup from "./popup.js";
 import Sound from "./sound.js";
 import Field from "./field.js";
 
-export default class Game {
-  constructor() {
-    this.html = document.querySelector("html");
+export default class gameBuilder {
+  withGameSpeed(speed) {
+    this.speed = speed;
+    return this;
+  }
+  withGameDuration(duration) {
+    this.time_counts = duration;
+    return this;
+  }
+  withObjCount(count) {
+    this.obj_counts = count;
+    return this;
+  }
 
+  build() {
+    console.log("builder pattern");
+    console.log(this);
+    return new Game(this.speed, this.time_counts, this.obj_counts);
+  }
+}
+
+class Game {
+  constructor(speed, time_counts, obj_counts) {
+    // this.speed = 0.5;
+    // this.time_counts = 15;
+    // this.obj_counts = 5;
+    this.speed = speed;
+    this.time_counts = time_counts;
+    this.obj_counts = obj_counts;
+
+    this.html = document.querySelector("html");
     this.timer_span = document.querySelector(".timer");
     this.timer_text = document.querySelector(".timer >span");
     this.play_btn = document.querySelector(".play");
@@ -18,12 +45,8 @@ export default class Game {
     this.is_paused = false;
     // 카운트다운을 하는 카운터 객체
     this.counter = null;
-    this.speed = 0.5;
 
     this.level = 1;
-
-    this.time_counts = 15;
-    this.obj_counts = 5;
 
     this.count = this.time_counts;
     this.carrot_count = this.obj_counts * this.level;
@@ -179,6 +202,8 @@ export default class Game {
     this.counter_working = true;
     this.is_paused = false;
     this.sound_effect.play_state = true;
+    this.sound_effect.control_bg_sound();
+    // this.sound_effect.play_bg_sound();
 
     this.counter = setInterval(this.timer, 1000);
 
@@ -193,6 +218,8 @@ export default class Game {
     this.is_paused = true;
     this.counter_working = false;
     this.sound_effect.play_state = false;
+    this.sound_effect.control_bg_sound();
+    // this.sound_effect.pause_bg_sound();
 
     this.field.cancel_bug_movement();
   };
@@ -203,7 +230,8 @@ export default class Game {
     this.is_paused = false;
     this.counter_working = true;
     this.sound_effect.play_state = true;
-    // this.sound_effect.resume_sounds();
+    this.sound_effect.control_bg_sound();
+    // this.sound_effect.resume_bg_sound();
 
     this.field.creat_bug_movement_raf();
   };
@@ -243,7 +271,10 @@ export default class Game {
     this.carrot_number_span.innerText = this.carrot_count;
     this.set_time(this.count);
 
-    console.log(this.level);
+    // 기존 벌레 애니메이션을 없앤다.
+    this.field.cancel_bug_movement();
+
+    console.log(`level: `, this.level);
   };
 
   // 이벤트 객체 클릭 시 발생하는 함수
@@ -263,8 +294,9 @@ export default class Game {
       // if (target.getAttribute("class") === "carrot") {
       // console.log("당근클릭");
       // 음향효과
-      url = "./sound/carrot_pull.mp3";
+      // url = "./sound/carrot_pull.mp3";
       // this.sound_effect.play_sounds();
+      this.sound_effect.play_carrot_sounds();
       const remove_item = document.querySelector("#" + target);
       remove_item.remove();
 
@@ -272,14 +304,14 @@ export default class Game {
       carrot_number_span.innerText = this.carrot_count;
     } else if (target.includes("bug")) {
       // 음향효과
-      url = "./sound/bug_pull.mp3";
+      // url = "./sound/bug_pull.mp3";
       this.bug_count--;
-      console.log("bug");
-
+      this.sound_effect.play_bug_sounds();
+      // console.log("bug");
       // console.log("this.bug_count: ", this.bug_count);
     }
 
-    this.sound_effect.play_sounds(url);
+    // this.sound_effect.play_sounds(url);
     // new Audio(url).play();
     // const sound_effect_play = new Audio(url).play();
 
