@@ -5,6 +5,9 @@ web game made with pure HTML, CSS, JavaScript
 <div>
 <img width="500" src="https://user-images.githubusercontent.com/47317129/100799148-f9134e80-3467-11eb-9af6-427216a05401.PNG" >
 </div>
+
+
+<br><br>
 대학시절 MIS강의 과제로 만들었던 스크래치 게임의 오마주입니다.
 벌레를 피하여 당근만 클릭하면 성공하는 게임으로,
 매 스테이지 성공 시 난이도가 더 업그레이드 됩니다.
