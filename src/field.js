@@ -11,10 +11,10 @@ export default class Field {
     this.position_top = [];
     this.position_left = [];
 
-    this.docWidth = window.innerWidth;
-    this.docHeight = window.innerHeight;
+    this.doc_width = window.innerWidth;
+    this.doc_height = window.innerHeight;
 
-    this.rafID = null;
+    this.raf_id = null;
     this.angle = 0;
 
     this.x_pos = [];
@@ -22,7 +22,7 @@ export default class Field {
     this.hit_wall_counts = [];
     // this.hit_wall = false;
     // this.xPos = 0;
-    this.yPos = 0;
+    this.y_pos = 0;
     // this.hit_wall_count = 1;
     // this.no_move = false;
   }
@@ -32,9 +32,9 @@ export default class Field {
   };
 
   // 랜덤 숫자 생성 함수
-  randomNum = (lower, upper) => {
-    let myRandom = Math.floor(Math.random() * (upper - lower + 1)) + lower;
-    return myRandom;
+  random_num = (lower, upper) => {
+    let my_random = Math.floor(Math.random() * (upper - lower + 1)) + lower;
+    return my_random;
   };
 
   bug_create = (id, index) => {
@@ -104,11 +104,14 @@ export default class Field {
       //   this.game.obj_counts[this.game.level] * 2
     ) {
       // while (this.position_top.length < bug_count * 2) {
-      let random_top = this.randomNum(this.docHeight / 2, this.docHeight - 200);
+      let random_top = this.random_num(
+        this.doc_height / 2,
+        this.doc_height - 200
+      );
       random_top = Math.round(random_top / 30) * 30;
-      let random_left = this.randomNum(0, this.docWidth - 200);
+      let random_left = this.random_num(0, this.doc_width - 200);
       random_left = Math.round(random_left / 30) * 30;
-      // const random_left = randomNum(0, docWidth - 900);
+      // const random_left = random_num(0, doc_width - 900);
       //   if (this.position_top.indexOf(random_top) === -1)
       this.position_top.push(random_top);
       //   if (this.position_left.indexOf(random_left) === -1)
@@ -125,7 +128,7 @@ export default class Field {
 
       id++;
 
-      let random_deg = this.randomNum(-360, 360);
+      let random_deg = this.random_num(-360, 360);
       random_deg = Math.round(random_deg / 10) * 10;
       if (this.degrees.indexOf(random_deg) === -1)
         this.degrees.push(random_deg);
@@ -167,7 +170,7 @@ export default class Field {
     // }
 
     // 화면 밖을 나가는 경우 예외처리
-    if (standard >= this.docWidth - 100 || standard <= 0) {
+    if (standard >= this.doc_width - 100 || standard <= 0) {
       // this.hit_wall_count++;
       this.hit_wall_counts[index] = Number(this.hit_wall_counts[index]) + 1;
       // this.hit_wall = true;
@@ -178,18 +181,18 @@ export default class Field {
     // }
     // console.log("this.hit_wall_counts[index]: ", this.hit_wall_counts[index]);
 
-    this.yPos += 0.3 * Math.sin(this.angle);
+    this.y_pos += 0.3 * Math.sin(this.angle);
     this.angle += 0.05;
 
     if (this.hit_wall_counts[index] % 2 === 1) {
       // console.log("증가");
       this.x_pos[index] += 3;
-      obj.style.transform = `translate(${this.x_pos[index]}px, ${this.yPos}px)`;
+      obj.style.transform = `translate(${this.x_pos[index]}px, ${this.y_pos}px)`;
       // obj.style.transform += `scaleX(-1)`;
     } else {
       // console.log("감소");
       this.x_pos[index] -= 3;
-      obj.style.transform = `translate(${this.x_pos[index]}px, ${this.yPos}px) scaleX(-1)`;
+      obj.style.transform = `translate(${this.x_pos[index]}px, ${this.y_pos}px) scaleX(-1)`;
     }
   };
 
@@ -200,17 +203,17 @@ export default class Field {
     for (let i = 0; i < bugs.length; i++) {
       bugs[i] && this.creat_bug_movement(bugs[i], i);
     }
-    this.rafID = requestAnimationFrame(this.creat_bug_movement_raf);
+    this.raf_id = requestAnimationFrame(this.creat_bug_movement_raf);
   };
 
   reset_setting = () => {
     this.x_pos = [];
     this.hit_wall_counts = [];
-    this.yPos = 0;
+    this.y_pos = 0;
     this.angle = 0;
   };
 
   cancel_bug_movement = () => {
-    cancelAnimationFrame(this.rafID);
+    cancelAnimationFrame(this.raf_id);
   };
 }

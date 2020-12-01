@@ -1,19 +1,19 @@
 "use strict";
 // import Field from "./field.js";
-import Popup from "./popup.js";
+import { Popup, popup_text } from "./popup.js";
 import Sound from "./sound.js";
 import Field from "./field.js";
 
 export default class gameBuilder {
-  withGameSpeed(speed) {
+  with_game_speed(speed) {
     this.speed = speed;
     return this;
   }
-  withGameDuration(duration) {
+  with_game_duration(duration) {
     this.time_counts = duration;
     return this;
   }
-  withObjCount(count) {
+  with_obj_count(count) {
     this.obj_counts = count;
     return this;
   }
@@ -91,55 +91,60 @@ class Game {
   // 게임이 실패인지 종료인지 확인하는 함수
   check_game_end = () => {
     console.group("check_game_end");
-    let url = "";
+    // let url = "";
     // const background_audio = document.querySelector("audio");
 
     if (this.carrot_count === 0) {
-      clearInterval(this.counter);
-      this.counter_working = false;
-
-      url = "./sound/game_win.mp3";
+      // url = "./sound/game_win.mp3";
+      this.sound_effect.play_winning_sounds();
 
       // replay 모달창을 보여준다.
-      this.game_finish_banner.show_with_text("YOU WON!");
-
-      this.sound_effect.background_audio.pause();
-      this.sound_effect.background_audio.currentTime = 0;
+      this.game_finish_banner.show_with_text(popup_text.win);
 
       // 레벨업
       this.level++;
       console.log(this.level);
 
+      // clearInterval(this.counter);
+      // this.counter_working = false;
+      // this.sound_effect.background_audio.pause();
+      // this.sound_effect.background_audio.currentTime = 0;
+      this.game_stop();
+
       // 당근 개수가 남아있으면 게임 실패
     } else if (this.count <= 0 && this.carrot_count !== 0) {
-      url = "./sound/alert.wav";
+      // url = "./sound/alert.wav";
+      this.sound_effect.play_game_over_sounds();
+      this.game_finish_banner.show_with_text(popup_text.game_over);
 
-      this.game_finish_banner.show_with_text("GAME OVER");
-
-      clearInterval(this.counter);
-      this.counter_working = false;
-      this.sound_effect.background_audio.pause();
-      this.sound_effect.background_audio.currentTime = 0;
+      // clearInterval(this.counter);
+      // this.counter_working = false;
+      // this.sound_effect.background_audio.pause();
+      // this.sound_effect.background_audio.currentTime = 0;
       // play_state = false;
+      this.game_stop();
 
       // 벌레 클릭 시 실패
     } else if (this.bug_count !== this.level * this.obj_counts) {
       // } else if (this.bug_count !== 10) {
-      url = "./sound/alert.wav";
-
-      clearInterval(this.counter);
-      this.counter_working = false;
-
+      // url = "./sound/alert.wav";
+      this.sound_effect.play_game_over_sounds();
       // replay 모달창을 보여준다.
-      this.game_finish_banner.show_with_text("GAME OVER");
+      this.game_finish_banner.show_with_text(popup_text.game_over);
 
-      this.sound_effect.background_audio.pause();
-      this.sound_effect.background_audio.currentTime = 0;
+      // clearInterval(this.counter);
+      // this.counter_working = false;
+      // this.sound_effect.background_audio.pause();
+      // this.sound_effect.background_audio.currentTime = 0;
+      this.game_stop();
+
       // play_state = false;
+      // // 기존 벌레 애니메이션을 없앤다.
+      // this.field.cancel_bug_movement();
     }
 
-    const sound_effect_play = new Audio(url).play();
-    this.sound_effect.check_bg_running(sound_effect_play);
+    // const sound_effect_play = new Audio(url).play();
+    // this.sound_effect.check_bg_running(sound_effect_play);
     // const sound_effect_play = this.sound_effect.play_sounds(url);
     // this.sound_effect.check_bg_running(sound_effect_play);
 
@@ -190,6 +195,16 @@ class Game {
     this.play_btn.innerHTML = '<i class="fas fa-pause"></i> pause';
   };
 
+  game_ready = () => {
+    // const game_guide = "벌레를 피해 당근을 모두 수확해주세요!";
+
+    this.set_time(this.count);
+    this.field.obj_create(this.bug_count);
+    this.game_finish_banner.show_game_guidline(popup_text.guide);
+
+    this.game_finish_banner.set_click_listener(() => this.game_start());
+  };
+
   // 게임 시작 함수
   game_start = () => {
     this.reset_game_setting();
@@ -234,6 +249,15 @@ class Game {
     // this.sound_effect.resume_bg_sound();
 
     this.field.creat_bug_movement_raf();
+  };
+
+  game_stop = () => {
+    clearInterval(this.counter);
+    this.counter_working = false;
+    this.sound_effect.background_audio.pause();
+    this.sound_effect.background_audio.currentTime = 0;
+    // // 기존 벌레 애니메이션을 없앤다.
+    this.field.cancel_bug_movement();
   };
 
   check_play_status = () => {

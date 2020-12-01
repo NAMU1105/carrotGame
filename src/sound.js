@@ -7,16 +7,18 @@ export default class Sound {
     // this.url = "";
     this.carrot_pull_sound = "./sound/carrot_pull.mp3";
     this.bug_touch_sound = "./sound/bug_pull.mp3";
-    this.audioContext = null;
+    this.winning_sound = "./sound/game_win.mp3";
+    this.game_over_sound = "./sound/alert.wav";
+    this.audio_context = null;
   }
 
   control_bg_sound = () => {
-    const audioContext = new AudioContext();
-    this.audioContext = audioContext;
+    const audio_context = new AudioContext();
+    this.audio_context = audio_context;
     // 오디오가 중지상태라면
-    if (this.audioContext.state === "suspended") {
+    if (this.audio_context.state === "suspended") {
       // 실행 상태로 변경
-      this.audioContext.resume();
+      this.audio_context.resume();
     }
     // this.play_state = !this.play_state;
     if (this.play_state) {
@@ -36,7 +38,7 @@ export default class Sound {
   };
 
   resume_bg_sound = () => {
-    this.audioContext.resume();
+    this.audio_context.resume();
   };
 
   check_bg_running = (running_sound) => {
@@ -62,8 +64,14 @@ export default class Sound {
   play_carrot_sounds = () => {
     new Audio(this.carrot_pull_sound).play();
   };
+  play_winning_sounds = () => {
+    new Audio(this.winning_sound).play();
+  };
+  play_game_over_sounds = () => {
+    new Audio(this.game_over_sound).play();
+  };
 
   // create_audio_context = () => {
-  //   const audioContext = new AudioContext();
+  //   const audio_context = new audio_context();
   // };
 }

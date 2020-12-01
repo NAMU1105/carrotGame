@@ -1,6 +1,12 @@
 "use strict";
 
-export default class Popup {
+export const popup_text = Object.freeze({
+  guide: "벌레를 피해 당근을 모두 수확해주세요!",
+  win: "YOU WON!",
+  game_over: "GAME OVER",
+});
+
+export class Popup {
   constructor() {
     this.popup = document.querySelector(".modal");
     this.popup_text = document.querySelector(".modal > span");
