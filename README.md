@@ -4,7 +4,8 @@
 
 <!-- web game made with pure HTML, CSS, JavaScript -->
 
-##Inspiration
+## Inspiration
+
 순수 HTML, CSS, JavaScript로만 만든 웹게임으로
 대학시절 MIS강의 과제로 만들었던 스크래치 게임의 오마주(<a href="https://scratch.mit.edu/projects/121005504" target="_blank">해당 게임 보기</a>)입니다.
 <br><br>
