@@ -3,16 +3,14 @@
 <!-- <button>게임 직접 해보기</button> -->
 
 <!-- web game made with pure HTML, CSS, JavaScript -->
-
+<div>
+<img width="500" src="https://user-images.githubusercontent.com/47317129/100799148-f9134e80-3467-11eb-9af6-427216a05401.PNG" >
+</div>
 ## Inspiration
 
 순수 HTML, CSS, JavaScript로만 만든 웹게임으로
 대학시절 MIS강의 과제로 만들었던 스크래치 게임의 오마주(<a href="https://scratch.mit.edu/projects/121005504" target="_blank">해당 게임 보기</a>)입니다.
 <br><br>
-
-<div>
-<img width="500" src="https://user-images.githubusercontent.com/47317129/100799148-f9134e80-3467-11eb-9af6-427216a05401.PNG" >
-</div>
 
 ## What it does
 
@@ -56,4 +54,4 @@ ES6문법을 최대한 사용하자는 목적을 가지고 만든 프로젝트�
 
 # Try it out!
 
-<a href="http://49.247.208.236/carrotGame/index.html" target="_blank">이곳에서 직접 플레이해보세요</a>
+<a href="http://49.247.208.236/carrotGame/index.html" target="_blank">이곳에서 직접 플레이해보세요.</a>
