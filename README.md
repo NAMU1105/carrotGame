@@ -6,6 +6,7 @@
 <div>
 <img width="500" src="https://user-images.githubusercontent.com/47317129/100799148-f9134e80-3467-11eb-9af6-427216a05401.PNG" >
 </div>
+
 ## Inspiration
 
 순수 HTML, CSS, JavaScript로만 만든 웹게임으로
